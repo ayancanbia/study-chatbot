@@ -1,0 +1,138 @@
+{
+  "id": "CONTA_CORRENTE",
+  "nome_oficial": "Saldo em Conta Corrente — Balanço de Pagamentos",
+  "fonte": "Banco Central do Brasil",
+  "frequencia": "mensal",
+  "defasagem_publicacao_dias": 30,
+  "tem_revisao_historica": true,
+
+  "aliases": [
+    "conta corrente",
+    "saldo em conta corrente",
+    "balanço de pagamentos",
+    "balança de pagamentos",
+    "current account",
+    "saldo externo",
+    "resultado externo"
+  ],
+
+  "metrica_padrao": "percent_pib_acumulado_12m",
+  "metricas_possiveis": [
+    {
+      "id": "saldo_mensal_usd",
+      "descricao": "Saldo mensal em bilhões de dólares",
+      "uso": "Fluxo mensal bruto — volátil, pouco usado isoladamente"
+    },
+    {
+      "id": "acumulado_12m_usd",
+      "descricao": "Saldo acumulado nos últimos 12 meses em bilhões de dólares",
+      "uso": "Remove sazonalidade — padrão para análise de tendência"
+    },
+    {
+      "id": "percent_pib_acumulado_12m",
+      "descricao": "Saldo acumulado 12 meses como percentual do PIB",
+      "uso": "Padrão analítico — permite comparação entre países e ao longo do tempo"
+    },
+    {
+      "id": "acumulado_ano",
+      "descricao": "Saldo acumulado no ano calendário em bilhões de dólares",
+      "uso": "Referência para relatórios anuais"
+    }
+  ],
+
+  "componentes": [
+    {
+      "id": "balanca_comercial",
+      "descricao": "Exportações menos importações de bens",
+      "relevancia": "Principal componente positivo da conta corrente brasileira — commodities dominam"
+    },
+    {
+      "id": "balanca_servicos",
+      "descricao": "Exportações menos importações de serviços (turismo, fretes, royalties)",
+      "relevancia": "Historicamente deficitário para o Brasil — pagamentos de royalties e viagens"
+    },
+    {
+      "id": "renda_primaria",
+      "descricao": "Remessa de lucros, dividendos e juros ao exterior",
+      "relevancia": "Principal componente negativo — empresas estrangeiras remetem lucros"
+    },
+    {
+      "id": "renda_secundaria",
+      "descricao": "Transferências unilaterais — remessas de imigrantes",
+      "relevancia": "Componente menor, geralmente superavitário"
+    }
+  ],
+
+  "sazonalidade": [
+    {
+      "periodo": "Q1",
+      "efeito": "Remessa de dividendos concentrada — renda primária mais negativa"
+    },
+    {
+      "periodo": "Q2/Q3",
+      "efeito": "Alta da balança comercial por safra agrícola — melhora sazonal do saldo"
+    }
+  ],
+
+  "relacoes": [
+    {
+      "indicador": "PIB",
+      "tipo": "denominador",
+      "descricao": "PIB é usado para normalizar o saldo — conta corrente como % do PIB é a métrica padrão",
+      "metricas_derivadas": [
+        {
+          "id": "percent_pib",
+          "formula": "conta_corrente_acumulado_12m_usd / PIB_usd * 100",
+          "uso": "Métrica padrão de vulnerabilidade externa — abaixo de -3% é considerado zona de atenção"
+        }
+      ],
+      "perguntas_tipicas": [
+        "Qual o saldo da conta corrente como % do PIB?",
+        "O Brasil está vulnerável externamente?"
+      ]
+    },
+    {
+      "indicador": "USD_BRL",
+      "tipo": "correlacao",
+      "descricao": "Déficit em conta corrente pressiona o câmbio — exige mais dólares do exterior",
+      "perguntas_tipicas": [
+        "O déficit externo está pressionando o câmbio?"
+      ]
+    },
+    {
+      "indicador": "BALANCA_COMERCIAL",
+      "tipo": "componente",
+      "descricao": "Balança comercial é o maior componente da conta corrente brasileira",
+      "perguntas_tipicas": [
+        "O superávit comercial está compensando o déficit de serviços?"
+      ]
+    }
+  ],
+
+  "regras_semanticas": [
+    {
+      "condicao": "usuario pergunta saldo da conta corrente sem especificar métrica",
+      "acao": "usar percent_pib_acumulado_12m"
+    },
+    {
+      "condicao": "usuario pergunta se brasil está vulnerável externamente",
+      "acao": "calcular percent_pib e comparar com threshold de -3% do PIB"
+    },
+    {
+      "condicao": "usuario pergunta sobre resultado externo ou balanço de pagamentos",
+      "acao": "resolver para CONTA_CORRENTE como componente principal"
+    },
+    {
+      "condicao": "usuario menciona déficit ou superávit externo",
+      "acao": "usar saldo acumulado 12m em USD e percent_pib para contextualizar"
+    }
+  ],
+
+  "notas_metodologicas": [
+    "O BCB divulga os dados mensalmente com defasagem de aproximadamente 30 dias",
+    "Revisões históricas são comuns — especialmente nos dados de renda primária",
+    "O saldo mensal é muito volátil — sempre preferir acumulado 12 meses para análise",
+    "Déficit abaixo de -3% do PIB é referência histórica de zona de atenção para economias emergentes",
+    "O Brasil historicamente apresenta déficit em conta corrente compensado por superávit na conta financeira"
+  ]
+}

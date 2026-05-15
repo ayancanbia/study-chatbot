@@ -1,0 +1,176 @@
+{
+  "id": "PIB",
+  "nome_oficial": "Produto Interno Bruto",
+  "fonte": "IBGE",
+  "frequencia": "trimestral",
+  "defasagem_publicacao_dias": 60,
+  "tem_revisao_historica": true,
+
+  "aliases": [
+    "pib",
+    "produto interno bruto",
+    "crescimento econômico",
+    "crescimento do pib",
+    "economia brasileira",
+    "atividade econômica",
+    "gdp",
+    "crescimento"
+  ],
+
+  "metrica_padrao": "variacao_yoy",
+  "metricas_possiveis": [
+    {
+      "id": "variacao_yoy",
+      "descricao": "Variação em relação ao mesmo trimestre do ano anterior",
+      "uso": "Padrão analítico — remove sazonalidade, permite comparação histórica"
+    },
+    {
+      "id": "variacao_trimestral",
+      "descricao": "Variação em relação ao trimestre imediatamente anterior (com ajuste sazonal)",
+      "uso": "Identifica aceleração ou desaceleração no curto prazo"
+    },
+    {
+      "id": "nivel_bilhoes_brl",
+      "descricao": "Valor absoluto do PIB em bilhões de reais a preços correntes",
+      "uso": "Denominador para cálculo de ratios como dívida/PIB e conta corrente/PIB"
+    },
+    {
+      "id": "nivel_bilhoes_usd",
+      "descricao": "Valor absoluto do PIB em bilhões de dólares",
+      "uso": "Comparações internacionais e cálculo de conta corrente como % do PIB"
+    },
+    {
+      "id": "acumulado_4_trimestres",
+      "descricao": "Crescimento acumulado nos últimos 4 trimestres",
+      "uso": "Proxy anual para períodos sem fechamento de ano"
+    }
+  ],
+
+  "componentes": [
+    {
+      "id": "consumo_familias",
+      "descricao": "Gastos das famílias em bens e serviços",
+      "relevancia": "Maior componente do PIB brasileiro (~65%) — sensível a emprego e crédito"
+    },
+    {
+      "id": "consumo_governo",
+      "descricao": "Gastos do governo em custeio e serviços públicos",
+      "relevancia": "Componente estável, influenciado por política fiscal"
+    },
+    {
+      "id": "fbcf",
+      "descricao": "Formação Bruta de Capital Fixo — investimento em máquinas, equipamentos e construção",
+      "relevancia": "Indicador de confiança e perspectiva de crescimento futuro — o mais volátil"
+    },
+    {
+      "id": "exportacoes_liquidas",
+      "descricao": "Exportações menos importações de bens e serviços",
+      "relevancia": "Sensível ao câmbio e demanda global por commodities"
+    }
+  ],
+
+  "setores": [
+    {
+      "id": "agropecuaria",
+      "descricao": "Setor agrícola e pecuário",
+      "relevancia": "Alto peso nas exportações — safra impacta significativamente o PIB trimestral"
+    },
+    {
+      "id": "industria",
+      "descricao": "Indústria de transformação, construção, extrativa e utilidades",
+      "relevancia": "Sensível a juros e câmbio — mais volátil que serviços"
+    },
+    {
+      "id": "servicos",
+      "descricao": "Comércio, transporte, financeiro, imobiliário e outros serviços",
+      "relevancia": "Maior setor do PIB (~70%) — mais estável e sensível ao emprego"
+    }
+  ],
+
+  "sazonalidade": [
+    {
+      "periodo": "Q1",
+      "efeito": "Safra agrícola — agropecuária puxa crescimento"
+    },
+    {
+      "periodo": "Q4",
+      "efeito": "Comércio forte por festas de fim de ano — serviços e varejo"
+    }
+  ],
+
+  "relacoes": [
+    {
+      "indicador": "SELIC",
+      "tipo": "causal_inversa",
+      "descricao": "Juros altos reduzem consumo e investimento — freiam o crescimento do PIB",
+      "perguntas_tipicas": [
+        "Os juros altos estão freando o crescimento?",
+        "Qual o impacto da SELIC no PIB?"
+      ]
+    },
+    {
+      "indicador": "CONTA_CORRENTE",
+      "tipo": "denominador",
+      "descricao": "PIB é o denominador para expressar conta corrente como % do PIB",
+      "perguntas_tipicas": [
+        "Qual o déficit externo como % do PIB?"
+      ]
+    },
+    {
+      "indicador": "IPCA",
+      "tipo": "correlacao",
+      "descricao": "PIB acima do potencial pressiona inflação — relação de hiato do produto",
+      "perguntas_tipicas": [
+        "A economia está crescendo acima do potencial?",
+        "O crescimento está gerando pressão inflacionária?"
+      ]
+    },
+    {
+      "indicador": "PNAD_DESEMPREGO",
+      "tipo": "correlacao_inversa",
+      "descricao": "Crescimento do PIB tende a reduzir desemprego com defasagem de 1-2 trimestres",
+      "perguntas_tipicas": [
+        "O crescimento econômico está gerando empregos?"
+      ]
+    },
+    {
+      "indicador": "FOCUS",
+      "tipo": "expectativa",
+      "descricao": "Focus divulga projeções de crescimento do PIB para o ano corrente e próximo",
+      "perguntas_tipicas": [
+        "Qual a expectativa de crescimento do PIB?"
+      ]
+    }
+  ],
+
+  "regras_semanticas": [
+    {
+      "condicao": "usuario pergunta sobre crescimento econômico sem especificar métrica",
+      "acao": "usar variacao_yoy do trimestre mais recente disponível"
+    },
+    {
+      "condicao": "usuario menciona recessão",
+      "acao": "verificar se houve dois trimestres consecutivos de variacao_trimestral negativa"
+    },
+    {
+      "condicao": "usuario pergunta tamanho da economia brasileira",
+      "acao": "usar nivel_bilhoes_usd do ano mais recente"
+    },
+    {
+      "condicao": "usuario pergunta sobre pib como denominador para outro indicador",
+      "acao": "usar nivel_bilhoes_brl ou nivel_bilhoes_usd conforme o indicador solicitado"
+    },
+    {
+      "condicao": "usuario pergunta se brasil está em recessão",
+      "acao": "verificar dois trimestres consecutivos negativos em variacao_trimestral com ajuste sazonal"
+    }
+  ],
+
+  "notas_metodologicas": [
+    "O IBGE divulga o PIB trimestral com aproximadamente 60 dias de defasagem",
+    "Revisões históricas são frequentes e podem ser significativas — especialmente para trimestres recentes",
+    "A definição técnica de recessão (2 trimestres negativos) usa variação trimestral com ajuste sazonal",
+    "O PIB potencial não é divulgado oficialmente — estimativas variam entre instituições",
+    "Comparações internacionais em USD são sensíveis ao câmbio médio do período"
+  ]
+}
